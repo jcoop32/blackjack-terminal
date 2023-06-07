@@ -33,7 +33,7 @@ future features:
 const cards = [
   1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7,
   7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-  10, 10, 10, 10, 10, 10, 10, 10,
+  10, 10, 10, 10,
 ];
 //random num from array
 const ranNum1 = Math.floor(Math.random() * cards.length);
@@ -46,7 +46,14 @@ function ranCard() {
   const dealer2ndcard = cards[ranNum2];
   const player1stcard = cards[ranNum3];
   const player2ndcard = cards[ranNum4];
-  return `Dealer first card: ${dealer1stcard} \n Dealer second card: ${dealer2ndcard} \n Player first card: ${player1stcard}\n Player second card: ${player2ndcard}\n`;
+  console.log(
+    `Dealer first card: ${dealer1stcard} \nDealer second card: ${dealer2ndcard}\nPlayer first card: ${player1stcard}\nPlayer second card: ${player2ndcard}\n`
+  );
+  console.log(
+    `Dealer: ${dealer1stcard + dealer2ndcard}\nPlayer: ${
+      player1stcard + player2ndcard
+    }\n`
+  );
 }
 
-console.log(ranCard());
+ranCard();
