@@ -1,3 +1,4 @@
+const prompt = require('prompt-sync')();
 /**
  Black Jack
  Rules:
@@ -58,6 +59,7 @@ const cards = [
 
 // ranCard();
 
+//objects for dealer and player
 const dealer = {
   total: 0,
 };
@@ -65,22 +67,67 @@ const dealer = {
 const player = {
   total: 0,
 };
-function ranCard() {
+
+let exitGame = false;
+//function to generate new cards
+function startingCards() {
+  //generates 4 random numbers
   for (let i = 0; i < 4; i++) {
     const ranNum = Math.floor(Math.random() * cards.length);
     let dealerCards = cards[ranNum];
     let playerCards = cards[ranNum];
+    //random card selection for dealer
     if (i <= 1) {
       console.log(`Dealer Card #${i + 1}: ${dealerCards}`);
+      //adds current value of card to dealers total
       dealer.total += dealerCards;
     }
+    //random card selection for player
     if (i > 1 && i < 4) {
       console.log(`Player card #${i + 1} ${playerCards}`);
+      //adds current value of card to players total
       player.total += playerCards;
     }
   }
+
+  //keeps asking player if they want to hit
+  while (player.total < 21) {
+    let userHit = prompt('(h)it for new card?');
+    if (userHit === 'h') {
+      hitMe();
+    } else {
+      exitGame = true;
+      break;
+    }
+  }
+  //logic for deciding winner
+  if (player.total < 22 && player.total > dealer.total) {
+    console.log(`Player Wins!`);
+  } else if (player.total > 21 || dealer.total > player.total) {
+    console.log('Dealer Wins :(');
+  } else if (player.total === dealer.total) {
+    console.log('Its a draw!');
+  }
 }
 
-ranCard();
+// startingCards();
+
+//function for user to draw a new card
+function hitMe() {
+  const ranNum = Math.floor(Math.random() * cards.length);
+  let newCard = cards[ranNum];
+  player.total += newCard;
+  console.log(`You got a ${newCard}\n Player Total: ${player.total}`);
+}
+startingCards();
+//loop
+// while (!exitGame) {
+//   if (player.total < 21) {
+//     startingCards();
+//   } else {
+//     break;
+//   }
+// }
+
 console.log(`Dealer: ${dealer.total}`);
 console.log(`Player: ${player.total}`);
