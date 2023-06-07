@@ -36,24 +36,51 @@ const cards = [
   10, 10, 10, 10,
 ];
 //random num from array
-const ranNum1 = Math.floor(Math.random() * cards.length);
-const ranNum2 = Math.floor(Math.random() * cards.length);
-const ranNum3 = Math.floor(Math.random() * cards.length);
-const ranNum4 = Math.floor(Math.random() * cards.length);
+// const ranNum1 = Math.floor(Math.random() * cards.length);
+// const ranNum2 = Math.floor(Math.random() * cards.length);
+// const ranNum3 = Math.floor(Math.random() * cards.length);
+// const ranNum4 = Math.floor(Math.random() * cards.length);
 
+// function ranCard() {
+//   const dealer1stcard = cards[ranNum1];
+//   const dealer2ndcard = cards[ranNum2];
+//   const player1stcard = cards[ranNum3];
+//   const player2ndcard = cards[ranNum4];
+//   console.log(
+//     `Dealer first card: ${dealer1stcard} \nDealer second card: ${dealer2ndcard}\nPlayer first card: ${player1stcard}\nPlayer second card: ${player2ndcard}\n`
+//   );
+//   console.log(
+//     `Dealer: ${dealer1stcard + dealer2ndcard}\nPlayer: ${
+//       player1stcard + player2ndcard
+//     }\n`
+//   );
+// }
+
+// ranCard();
+
+const dealer = {
+  total: 0,
+};
+
+const player = {
+  total: 0,
+};
 function ranCard() {
-  const dealer1stcard = cards[ranNum1];
-  const dealer2ndcard = cards[ranNum2];
-  const player1stcard = cards[ranNum3];
-  const player2ndcard = cards[ranNum4];
-  console.log(
-    `Dealer first card: ${dealer1stcard} \nDealer second card: ${dealer2ndcard}\nPlayer first card: ${player1stcard}\nPlayer second card: ${player2ndcard}\n`
-  );
-  console.log(
-    `Dealer: ${dealer1stcard + dealer2ndcard}\nPlayer: ${
-      player1stcard + player2ndcard
-    }\n`
-  );
+  for (let i = 0; i < 4; i++) {
+    const ranNum = Math.floor(Math.random() * cards.length);
+    let dealerCards = cards[ranNum];
+    let playerCards = cards[ranNum];
+    if (i <= 1) {
+      console.log(`Dealer Card #${i + 1}: ${dealerCards}`);
+      dealer.total += dealerCards;
+    }
+    if (i > 1 && i < 4) {
+      console.log(`Player card #${i + 1} ${playerCards}`);
+      player.total += playerCards;
+    }
+  }
 }
 
 ranCard();
+console.log(`Dealer: ${dealer.total}`);
+console.log(`Player: ${player.total}`);
