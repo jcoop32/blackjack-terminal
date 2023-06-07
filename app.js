@@ -78,17 +78,19 @@ function startingCards() {
     let playerCards = cards[ranNum];
     //random card selection for dealer
     if (i <= 1) {
-      console.log(`Dealer Card #${i + 1}: ${dealerCards}`);
+      console.log(`Dealer Card #${i + 1}: ${dealerCards}\n`);
       //adds current value of card to dealers total
       dealer.total += dealerCards;
     }
     //random card selection for player
     if (i > 1 && i < 4) {
-      console.log(`Player card #${i + 1} ${playerCards}`);
+      console.log(`Player card #${i - 1} ${playerCards}\n`);
       //adds current value of card to players total
       player.total += playerCards;
     }
   }
+  console.log(`Dealer Total: ${dealer.total}\n`);
+  console.log(`Player Total: ${player.total}`);
 
   //keeps asking player if they want to hit
   while (player.total < 21) {
@@ -103,6 +105,7 @@ function startingCards() {
   while (true) {
     if (dealer.total <= 16) {
       hitMeDealer();
+      // console.log(`Dealer total after hit: ${dealer.total}`);
     } else {
       false;
       break;
@@ -117,14 +120,14 @@ function hitMe() {
   const ranNum = Math.floor(Math.random() * cards.length);
   let newCard = cards[ranNum];
   player.total += newCard;
-  console.log(`You got a ${newCard}\n Player Total: ${player.total}`);
+  console.log(`You got a ${newCard}\nPLayer Total: ${player.total}`);
 }
 
 function hitMeDealer() {
   const ranNum = Math.floor(Math.random() * cards.length);
   let newCard = cards[ranNum];
   dealer.total += newCard;
-  console.log(`Dealer got a ${newCard}\n Player Total: ${dealer.total}`);
+  console.log(`Dealer got a ${newCard}\nDealer Total: ${dealer.total}`);
 }
 startingCards();
 //loop
@@ -136,14 +139,30 @@ startingCards();
 //   }
 // }
 
-console.log(`Dealer: ${dealer.total}`);
-console.log(`Player: ${player.total}`);
+// console.log(`Dealer: ${dealer.total}`);
+// console.log(`Player: ${player.total}`);
 
 //logic for deciding winner
-if (player.total < 22 && player.total > dealer.total) {
+if (player.total <= 21 && player.total > dealer.total) {
   console.log(`Player Wins!`);
-} else if (player.total > 21 || dealer.total > player.total) {
+  endGameCards();
+} else if (dealer.total === 21) {
+  console.log('Dealer has 21');
+  endGameCards();
+} else if (player.total > 21 && dealer.total < 22) {
   console.log('Dealer Wins :(');
+  endGameCards();
+} else if (dealer.total > player.total && dealer.total && player.total < 22) {
+  console.log(`Dealer Wins`);
+  endGameCards();
+} else if (player.total < 21 && dealer.total > 21) {
+  console.log(`Dealer Busts, Player Wins!`);
+  endGameCards();
 } else if (player.total === dealer.total) {
   console.log('Its a draw!');
+  endGameCards();
+}
+function endGameCards() {
+  console.log(`\nDealer Had ${dealer.total}`);
+  console.log(`Player Had ${player.total}`);
 }
