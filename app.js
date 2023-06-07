@@ -30,7 +30,7 @@ future features:
 - add bank account
 - double your money if you win
  */
-
+console.log(`Black Jack: Terminal Edition`);
 const cards = [
   1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7,
   7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
@@ -71,15 +71,23 @@ const player = {
 let exitGame = false;
 //function to generate new cards
 function startingCards() {
+  //resets total before each game starts
+  dealer.total = 0;
+  player.total = 0;
   //generates 4 random numbers
+  console.log(`-----------------------`);
   for (let i = 0; i < 4; i++) {
     const ranNum = Math.floor(Math.random() * cards.length);
     let dealerCards = cards[ranNum];
     let playerCards = cards[ranNum];
     //random card selection for dealer
-    if (i <= 1) {
-      console.log(`Dealer Card #${i + 1}: ${dealerCards}\n`);
+    if (i < 1) {
+      console.log(`\nDealer Card #${i + 1}: ${dealerCards}\n`);
       //adds current value of card to dealers total
+      dealer.total += dealerCards;
+    }
+    if (i === 1) {
+      console.log(`Dealer Card #2: Hidden\n`);
       dealer.total += dealerCards;
     }
     //random card selection for player
@@ -94,14 +102,15 @@ function startingCards() {
 
   //keeps asking player if they want to hit
   while (player.total < 21) {
-    let userHit = prompt('(h)it for new card?');
+    let userHit = prompt('(h)it for new card?: ');
     if (userHit === 'h') {
       hitMe();
     } else {
-      exitGame = true;
+      // exitGame = true;
       break;
     }
   }
+  //keeps making dealer hit until at least at 17
   while (true) {
     if (dealer.total <= 16) {
       hitMeDealer();
@@ -120,16 +129,17 @@ function hitMe() {
   const ranNum = Math.floor(Math.random() * cards.length);
   let newCard = cards[ranNum];
   player.total += newCard;
-  console.log(`You got a ${newCard}\nPLayer Total: ${player.total}`);
+  console.log(`You got a ${newCard}\nPlayer Total: ${player.total}`);
 }
 
+//hitting dealer
 function hitMeDealer() {
   const ranNum = Math.floor(Math.random() * cards.length);
   let newCard = cards[ranNum];
   dealer.total += newCard;
   console.log(`Dealer got a ${newCard}\nDealer Total: ${dealer.total}`);
 }
-startingCards();
+// startingCards();
 //loop
 // while (!exitGame) {
 //   if (player.total < 21) {
@@ -142,27 +152,43 @@ startingCards();
 // console.log(`Dealer: ${dealer.total}`);
 // console.log(`Player: ${player.total}`);
 
-//logic for deciding winner
-if (player.total <= 21 && player.total > dealer.total) {
-  console.log(`Player Wins!`);
-  endGameCards();
-} else if (dealer.total === 21) {
-  console.log('Dealer has 21');
-  endGameCards();
-} else if (player.total > 21 && dealer.total < 22) {
-  console.log('Dealer Wins :(');
-  endGameCards();
-} else if (dealer.total > player.total && dealer.total && player.total < 22) {
-  console.log(`Dealer Wins`);
-  endGameCards();
-} else if (player.total < 21 && dealer.total > 21) {
-  console.log(`Dealer Busts, Player Wins!`);
-  endGameCards();
-} else if (player.total === dealer.total) {
-  console.log('Its a draw!');
-  endGameCards();
-}
-function endGameCards() {
-  console.log(`\nDealer Had ${dealer.total}`);
-  console.log(`Player Had ${player.total}`);
+//loop for game with menu
+while (!exitGame) {
+  let userContinue = prompt('(p)lay game, check (b)alance, e(x)it: ');
+  if (userContinue === 'p') {
+    startingCards();
+  } else if (userContinue === 'b') {
+    console.log(`Balance Feature coming soon.`);
+  } else if (userContinue === 'x') {
+    exitGame = true;
+    console.log(`Player left table.`);
+    break;
+  } else {
+    console.log('command not found');
+  }
+  //logic for deciding winner
+  if (player.total <= 21 && player.total > dealer.total) {
+    console.log(`Player Wins!`);
+    endGameCards();
+  } else if (dealer.total === 21 && player.total != 21) {
+    console.log('Dealer has 21');
+    endGameCards();
+  } else if (player.total > 21 && dealer.total <= 21) {
+    console.log('Dealer Wins :( player busts');
+    endGameCards();
+  } else if (dealer.total > player.total && dealer.total && player.total < 21) {
+    console.log(`Dealer Wins, they had more than player and was below 21`);
+    endGameCards();
+  } else if (player.total <= 21 && dealer.total > 21) {
+    console.log(`Dealer Busts, Player Wins!`);
+    endGameCards();
+  } else if (player.total === dealer.total) {
+    console.log('Its a draw!');
+    endGameCards();
+  }
+  function endGameCards() {
+    console.log(`\nDealer Had ${dealer.total}`);
+    console.log(`Player Had ${player.total}`);
+    console.log(`---------------------------`);
+  }
 }
