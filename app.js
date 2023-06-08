@@ -70,6 +70,7 @@ function startingCards() {
       console.log(`\nDealer Card #${i + 1}: ${dealerCards}\n`);
       //adds current value of card to dealers total
       dealer.total += dealerCards;
+      //checks for ace (11)
       if (dealerCards === 11 && dealer.total > 21) {
         dealerCards = 1;
       }
@@ -77,6 +78,7 @@ function startingCards() {
     if (i === 1) {
       console.log(`Dealer Card #2: Hidden\n`);
       dealer.total += dealerCards;
+      //checks for ace (11)
       if (dealerCards === 11 && dealer.total > 21) {
         dealerCards = 1;
       }
@@ -86,6 +88,7 @@ function startingCards() {
       console.log(`Player card #${i - 1} ${playerCards}\n`);
       //adds current value of card to players total
       player.total += playerCards;
+      //checks for ace (11)
       if (playerCards === 11 && player.total > 21) {
         playerCards = 1;
       }
