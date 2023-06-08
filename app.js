@@ -26,6 +26,9 @@ const prompt = require('prompt-sync')();
     if user amount is >21 -> computer automatically wins
     if computer amount === user amount draw
 
+
+ace card-
+if player or dealer pulls an ace, it is an 11 unless it will make their total > 21, which will turn it into a 1
 future features:
 - add bank account
 - double your money if you win
@@ -33,9 +36,9 @@ future features:
  */
 console.log(`Black Jack: Terminal Edition`);
 const cards = [
-  1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7,
-  7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-  10, 10, 10, 10,
+  11, 11, 11, 11, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7,
+  7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+  10, 10, 10, 10, 10,
 ];
 
 //objects for dealer and player
@@ -67,16 +70,25 @@ function startingCards() {
       console.log(`\nDealer Card #${i + 1}: ${dealerCards}\n`);
       //adds current value of card to dealers total
       dealer.total += dealerCards;
+      if (dealerCards === 11 && dealer.total > 21) {
+        dealerCards = 1;
+      }
     }
     if (i === 1) {
       console.log(`Dealer Card #2: Hidden\n`);
       dealer.total += dealerCards;
+      if (dealerCards === 11 && dealer.total > 21) {
+        dealerCards = 1;
+      }
     }
     //random card selection for player
     if (i > 1 && i < 4) {
       console.log(`Player card #${i - 1} ${playerCards}\n`);
       //adds current value of card to players total
       player.total += playerCards;
+      if (playerCards === 11 && player.total > 21) {
+        playerCards = 1;
+      }
     }
   }
   // console.log(`Dealer Total: ${dealer.total}\n`);
@@ -131,6 +143,7 @@ while (!exitGame) {
   );
   if (userContinue === 'p') {
     startingCards();
+    gameLogic();
   } else if (userContinue === 'b') {
     console.log(`Balance Feature coming soon.`);
   } else if (userContinue === 'g') {
@@ -142,9 +155,6 @@ while (!exitGame) {
   } else {
     console.log('command not found');
   }
-
-  gameLogic();
-  endGameCards();
 }
 
 function endGameCards() {
@@ -153,6 +163,7 @@ function endGameCards() {
   console.log(`---------------------------`);
 }
 
+//total games won
 function gameLogs() {
   console.log(`Total games won: \n`);
   console.log(`Player: ${player.gamesWon}\n`);
@@ -190,4 +201,5 @@ function gameLogic() {
     console.log('Its a Draw!');
     tieGame += 1;
   }
+  endGameCards();
 }
