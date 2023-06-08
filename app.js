@@ -29,6 +29,7 @@ const prompt = require('prompt-sync')();
 future features:
 - add bank account
 - double your money if you win
+- check past game logs
  */
 console.log(`Black Jack: Terminal Edition`);
 const cards = [
@@ -36,38 +37,19 @@ const cards = [
   7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
   10, 10, 10, 10,
 ];
-//random num from array
-// const ranNum1 = Math.floor(Math.random() * cards.length);
-// const ranNum2 = Math.floor(Math.random() * cards.length);
-// const ranNum3 = Math.floor(Math.random() * cards.length);
-// const ranNum4 = Math.floor(Math.random() * cards.length);
-
-// function ranCard() {
-//   const dealer1stcard = cards[ranNum1];
-//   const dealer2ndcard = cards[ranNum2];
-//   const player1stcard = cards[ranNum3];
-//   const player2ndcard = cards[ranNum4];
-//   console.log(
-//     `Dealer first card: ${dealer1stcard} \nDealer second card: ${dealer2ndcard}\nPlayer first card: ${player1stcard}\nPlayer second card: ${player2ndcard}\n`
-//   );
-//   console.log(
-//     `Dealer: ${dealer1stcard + dealer2ndcard}\nPlayer: ${
-//       player1stcard + player2ndcard
-//     }\n`
-//   );
-// }
-
-// ranCard();
 
 //objects for dealer and player
 const dealer = {
   total: 0,
+  gamesWon: 0,
 };
 
 const player = {
   total: 0,
+  gamesWon: 0,
 };
 
+let tieGame = 0;
 let exitGame = false;
 //function to generate new cards
 function startingCards() {
@@ -97,7 +79,7 @@ function startingCards() {
       player.total += playerCards;
     }
   }
-  console.log(`Dealer Total: ${dealer.total}\n`);
+  // console.log(`Dealer Total: ${dealer.total}\n`);
   console.log(`Player Total: ${player.total}`);
 
   //keeps asking player if they want to hit
@@ -112,6 +94,9 @@ function startingCards() {
   }
   //keeps making dealer hit until at least at 17
   while (true) {
+    if (player.total > 21) {
+      break;
+    }
     if (dealer.total <= 16) {
       hitMeDealer();
       // console.log(`Dealer total after hit: ${dealer.total}`);
@@ -121,8 +106,6 @@ function startingCards() {
     }
   }
 }
-
-// startingCards();
 
 //function for user to draw a new card
 function hitMe() {
@@ -139,26 +122,19 @@ function hitMeDealer() {
   dealer.total += newCard;
   console.log(`Dealer got a ${newCard}\nDealer Total: ${dealer.total}`);
 }
-// startingCards();
-//loop
-// while (!exitGame) {
-//   if (player.total < 21) {
-//     startingCards();
-//   } else {
-//     break;
-//   }
-// }
-
-// console.log(`Dealer: ${dealer.total}`);
-// console.log(`Player: ${player.total}`);
 
 //loop for game with menu
 while (!exitGame) {
-  let userContinue = prompt('(p)lay game, check (b)alance, e(x)it: ');
+  //menu logic
+  let userContinue = prompt(
+    '(p)lay game, check (b)alance, past (g)ames, e(x)it: '
+  );
   if (userContinue === 'p') {
     startingCards();
   } else if (userContinue === 'b') {
     console.log(`Balance Feature coming soon.`);
+  } else if (userContinue === 'g') {
+    gameLogs();
   } else if (userContinue === 'x') {
     exitGame = true;
     console.log(`Player left table.`);
@@ -166,29 +142,52 @@ while (!exitGame) {
   } else {
     console.log('command not found');
   }
-  //logic for deciding winner
-  if (player.total <= 21 && player.total > dealer.total) {
-    console.log(`Player Wins!`);
-    endGameCards();
-  } else if (dealer.total === 21 && player.total != 21) {
-    console.log('Dealer has 21');
-    endGameCards();
-  } else if (player.total > 21 && dealer.total <= 21) {
-    console.log('Dealer Wins :( player busts');
-    endGameCards();
-  } else if (dealer.total > player.total && dealer.total && player.total < 21) {
-    console.log(`Dealer Wins, they had more than player and was below 21`);
-    endGameCards();
-  } else if (player.total <= 21 && dealer.total > 21) {
-    console.log(`Dealer Busts, Player Wins!`);
-    endGameCards();
-  } else if (player.total === dealer.total) {
-    console.log('Its a draw!');
-    endGameCards();
+
+  gameLogic();
+  endGameCards();
+}
+
+function endGameCards() {
+  console.log(`\nDealer Had ${dealer.total}`);
+  console.log(`Player Had ${player.total}`);
+  console.log(`---------------------------`);
+}
+
+function gameLogs() {
+  console.log(`Total games won: \n`);
+  console.log(`Player: ${player.gamesWon}\n`);
+  console.log(`Dealer: ${dealer.gamesWon}\n`);
+  console.log(`Games Tied: ${tieGame}\n`);
+}
+
+//logic for deciding winner
+function gameLogic() {
+  //v2
+  if (player.total < 21 && dealer.total < 21 && player.total > dealer.total) {
+    console.log('Player wins');
+    player.gamesWon += 1;
   }
-  function endGameCards() {
-    console.log(`\nDealer Had ${dealer.total}`);
-    console.log(`Player Had ${player.total}`);
-    console.log(`---------------------------`);
+  if (player.total === 21) {
+    console.log('Player Wins with 21!');
+    player.gamesWon += 1;
+  }
+  if (dealer.total > 21) {
+    console.log('Player Wins, dealer busted');
+    player.gamesWon += 1;
+  }
+  if (dealer.total === 21) {
+    console.log(`Dealer has 21:(`);
+  }
+  if (player.total > 21) {
+    console.log(`Dealer Wins, player busted`);
+    dealer.gamesWon += 1;
+  }
+  if (dealer.total < 21 && player.total < 21 && dealer.total > player.total) {
+    console.log('Dealer Wins');
+    dealer.gamesWon += 1;
+  }
+  if (player.total === dealer.total) {
+    console.log('Its a Draw!');
+    tieGame += 1;
   }
 }
